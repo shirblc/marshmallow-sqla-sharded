@@ -1,0 +1,37 @@
+"""
+Defines the SQLAlchemy models that are used to generate the Mashmallow schemas
+"""
+import sys
+import os
+from sqlalchemy.ext.horizontal_shard import ShardedSession, ShardedQuery
+from sharded_session import shard_chooser, id_chooser, execute_chooser, shards
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+)
+
+# Engine
+Session = sessionmaker(class_=ShardedSession)
+Session.configure(
+    shards=shards,
+    shard_chooser=shard_chooser,
+    id_chooser=id_chooser,
+    execute_chooser=execute_chooser,
+    query_cls=ShardedQuery,
+)
+
+
+# Models
+# -----------------------------------------------------------------
+BaseModel = declarative_base()
+
+
+class Category(BaseModel):
+    __tablename__ = "categories"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True, nullable=False)
+    parent_id = Column(Integer, ForeignKey("categories.id"))
