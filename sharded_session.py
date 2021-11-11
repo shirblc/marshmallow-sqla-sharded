@@ -44,4 +44,4 @@ def execute_chooser(query):
     just be all of them.
     Adjusted from https://docs.sqlalchemy.org/en/14/_modules/examples/sharding/attribute_shard.html
     """
-    return ["read", "write"]
+    return ["write"]

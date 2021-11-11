@@ -7,21 +7,24 @@ def query_categories():
 
     categories = session.query(Category).order_by(Category.id).offset(10).limit(10)
 
-    formatted = CategorySchema(many=True).dump(categories)
+    # formatted = CategorySchema(many=True).dump(categories)
 
-    print(formatted)
+    # print(formatted)
 
 
 def query_categories_shard():
     session = Session()
 
-    categories_query = session.query(Category).set_shard("read")
-    categories = categories_query.limit(10)
+    categories = session.query(Category).set_shard("read").order_by(Category.id).offset(10).limit(10)
 
-    for category in categories:
-        print(
-            {"id": category.id, "name": category.name, "parent_id": category.parent_id}
-        )
+    formatted = CategorySchema(many=True).dump(categories)
+
+    print(formatted)
+
+    # for category in categories:
+    #     print(
+    #         {"id": category.id, "name": category.name, "parent_id": category.parent_id}
+    #     )
 
 
 def add_category():
@@ -66,7 +69,7 @@ def delete_category():
 
 if __name__ == "__main__":
     query_categories()
-    # query_categories_shard()
+    query_categories_shard()
     # add_category()
     # update_category()
     # delete_category()
