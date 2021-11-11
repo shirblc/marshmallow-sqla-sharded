@@ -1,15 +1,15 @@
-from models import Session, Category
+from models import Session, Category, CategorySchema
 
 
 def query_categories():
     session = Session()
+    print(session.get_bind())
 
-    categories = session.query(Category).limit(10)
+    categories = session.query(Category).order_by(Category.id).offset(10).limit(10)
 
-    for category in categories:
-        print(
-            {"id": category.id, "name": category.name, "parent_id": category.parent_id}
-        )
+    formatted = CategorySchema(many=True).dump(categories)
+
+    print(formatted)
 
 
 def query_categories_shard():
@@ -65,8 +65,8 @@ def delete_category():
 
 
 if __name__ == "__main__":
-    # query_categories()
-    query_categories_shard()
+    query_categories()
+    # query_categories_shard()
     # add_category()
     # update_category()
-    delete_category()
+    # delete_category()
